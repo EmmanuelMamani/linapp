@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class authController extends Controller
 {
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -23,41 +24,61 @@ class authController extends Controller
         ]);
 
         $user->assignRole('student');
-
-        return response()->json(['message' => 'Usuario registrado y rol asignado']);
-    }
-
-
-    public function login(Request $request)
-    {
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Credenciales inválidas'], 401);
-        }
-
-        $token = $user->createToken('token-api')->plainTextToken;
+        Auth::login($user);
+        $request->session()->regenerate();
 
         return response()->json([
-            'token' => $token,
+            'message' => 'Usuario registrado exitosamente',
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->getRoleNames()->first() 
+                'role' => $user->getRoleNames()->first()
+            ]
+        ]);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Credenciales inválidas'], 401);
+        }
+
+        $request->session()->regenerate();
+        $user = Auth::user();
+
+        return response()->json([
+            'message' => 'Login exitoso',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->getRoleNames()->first()
             ]
         ]);
     }
 
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        return response()->json([
+            'user' => $request->user()
+        ]);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        Auth::guard('web')->logout();
 
-        return response()->json(['message' => 'Sesión cerrada']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Sesión cerrada exitosamente']);
     }
+
+
 }
