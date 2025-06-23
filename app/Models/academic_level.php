@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class academic_level extends Model
 {
-    //
+    protected $guarded = [];
+
 }

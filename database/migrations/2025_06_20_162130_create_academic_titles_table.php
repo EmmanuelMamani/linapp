@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('diploma_file')->nullable();
             $table->string('act_file')->nullable();
             $table->integer('score')->nullable();
-            $table->foreignId('academic_mode_id')->constrained()->onDelete('cascade');
-            $table->foreignId('academic_level_id')->constrained()->onDelete('cascade');
+            $table->foreignId('academic_mode_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('academic_level_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('plan_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('age_id')->constrained()->onDelete('cascade');
