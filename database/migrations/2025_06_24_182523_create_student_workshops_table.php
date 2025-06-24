@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('ci');
-            $table->string('cod_plan');
+            $table->string('code_plan');
             $table->date('birthdate');
             $table->string('code_est');
             $table->foreignId('workshop_type_id')->constrained()->onDelete('cascade');
