@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_workshops', function (Blueprint $table) {
+        Schema::create('workshop_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ci');
-            $table->string('cod_plan');
-            $table->date('birthdate');
-            $table->string('code_est');
-            $table->foreignId('workshop_type_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_workshops');
+        Schema::dropIfExists('workshop_types');
     }
 };

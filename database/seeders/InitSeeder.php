@@ -10,6 +10,7 @@ use App\Models\plan;
 use App\Models\profile;
 use App\Models\unit;
 use App\Models\User;
+use App\Models\Workshop_type;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -39,36 +40,38 @@ class InitSeeder extends Seeder
         $user->assignRole('admin_university');
 
         //profile
-        profile::create(['user_id'=>$user->id,'presentation'=>'','video'=>'']);
+        Profile::create(['user_id'=>$user->id,'presentation'=>'','video'=>'']);
 
         //Institution
-        institution::create(['name'=>'Universidad Mayor de San Simón']);
+        Institution::create(['name'=>'Universidad Mayor de San Simón']);
 
         //Unit
-        unit::create(['name'=>'Facultad de Ciencias Economicas','institution_id'=>1]);
+        Unit::create(['name'=>'Facultad de Ciencias Economicas','institution_id'=>1]);
 
         //plan
-        plan::create(['name'=>'LICENCIATURA EN CONTADURIA PUBLICA','code'=>'089801','unit_id'=>1]);
+        Plan::create(['name'=>'LICENCIATURA EN CONTADURIA PUBLICA','code'=>'089801','unit_id'=>1]);
 
         //gestion
-        age::create(['name'=>'2025','period'=>'1','active'=>true]);
+        Age::create(['name'=>'2025','period'=>'1','active'=>true]);
 
         //academic mode
-        academic_mode::create(['name'=>'Proyecto']);
-        academic_mode::create(['name'=>'Diplomado']);
+        Academic_mode::create(['name'=>'Proyecto']);
+        Academic_mode::create(['name'=>'Diplomado']);
         academic_mode::create(['name'=>'Adscripcion']);
         academic_mode::create(['name'=>'Taller']);
 
         //level academic
-        academic_level::create(['name'=>'Tecnico medio']);
-        academic_level::create(['name'=>'Tecnico superior']);
-        academic_level::create(['name'=>'Licenciatura']);
-        academic_level::create(['name'=>'Ingenieria']);
-        academic_level::create(['name'=>'Postgrado']);
-        academic_level::create(['name'=>'Maestria']);
-        academic_level::create(['name'=>'Especialidad']);
-        academic_level::create(['name'=>'Doctorado']);
+        Academic_level::create(['name'=>'Tecnico medio']);
+        Academic_level::create(['name'=>'Tecnico superior']);
+        Academic_level::create(['name'=>'Licenciatura']);
+        Academic_level::create(['name'=>'Ingenieria']);
+        Academic_level::create(['name'=>'Postgrado']);
+        Academic_level::create(['name'=>'Maestria']);
+        Academic_level::create(['name'=>'Especialidad']);
+        Academic_level::create(['name'=>'Doctorado']);
 
-
+        //workshop types
+        Workshop_type::create(['name'=>'Examen de grado']);
+        Workshop_type::create(['name'=>'Taller de informatica']);
     }
 }
