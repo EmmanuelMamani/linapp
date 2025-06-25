@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('code_est');
             $table->foreignId('workshop_type_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('age_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
