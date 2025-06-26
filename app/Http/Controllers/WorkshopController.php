@@ -38,4 +38,8 @@ class WorkshopController extends Controller
         $workshop = Student_workshop::find($id);
         $workshop->delete();
     }
+    public function search(Request $request){
+        $workshop= Student_workshop::where('age_id',$request->age_id)->where('workshop_type_id',$request->type_id)->orderBy('name')->get();
+        return response()->json($workshop);
+    }
 }

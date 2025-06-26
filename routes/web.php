@@ -14,9 +14,6 @@ Route::prefix('api')->middleware('web')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
 
-
-
-
     Route::middleware('auth:web')->group(function () {
 
         //User
@@ -27,7 +24,7 @@ Route::prefix('api')->middleware('web')->group(function () {
         Route::get('/workshopTypes',[WorkshopTypeController::class, 'index']);
         Route::post('/workshop', [WorkshopController::class, 'imported']);
         Route::delete('/workshop/{id}', [WorkshopController::class, 'delete']);
-
+        Route::post('/workshop/search', [WorkshopController::class, 'search']);
         //Age
         Route::get('/age',[AgeCotroller::class, 'index']);
     });

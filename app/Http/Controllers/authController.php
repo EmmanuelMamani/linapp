@@ -12,31 +12,35 @@ class authController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
-        ]);
+        $exists = User::where('ci', $request->ci)
+            ->where('birthdate', $request->birthdate)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['message' => 'Usuario ya existe'], 409);
+        }
+
+        $student = student_workshop::where('ci', $request->ci)
+            ->where('birthdate', $request->birthdate)
+            ->latest()->first();
+
+        if (!$student) {
+            return response()->json(['message' => 'Usuario no existe'], 409);
+        }
 
         $user = User::create([
-            'name' => $request->name,
+            'name' => $student->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'cellphone' => $request->cellphone,
+            'ci' => $student->ci,
+            'telephone' => $request->telephone,
+            'birthdate' => $student->birthdate,
+            'password' => bcrypt($request->password),
+            'code' => $student->code_est,
         ]);
-
         $user->assignRole('student');
         Auth::login($user);
-        $request->session()->regenerate();
-
-        return response()->json([
-            'message' => 'Usuario registrado exitosamente',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->getRoleNames()->first()
-            ]
-        ]);
+        return $this->authenticated( $user);
     }
 
     public function login(Request $request)
@@ -51,8 +55,11 @@ class authController extends Controller
         }
 
         $request->session()->regenerate();
-        $user = Auth::user();
+        return $this->authenticated( Auth::user());
+    }
 
+    private function authenticated( $user)
+    {
         return response()->json([
             'message' => 'Login exitoso',
             'user' => [
@@ -63,6 +70,7 @@ class authController extends Controller
             ]
         ]);
     }
+
 
     public function user(Request $request)
     {
@@ -81,43 +89,4 @@ class authController extends Controller
         return response()->json(['message' => 'Sesión cerrada exitosamente']);
     }
 
-    public function register_postulant(Request $request){
-        $student = student_workshop::where('ci',$request->ci)
-                    ->where('code_est',$request->code_est)
-                    ->where('birthday',$request->birtday)
-                    ->first();
-        if($student){
-            $user = User::create([
-                'name' => $student->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'ci'=>$student->ci,
-                'code_est'=>$student->code_est,
-                'birthday'=>$student->birthday,
-                'cellphone'=>$request->cellphone,
-                'telephone'=>$request->telephone,
-            ]);
-
-            $user->assignRole('student');
-            Auth::login($user);
-            $request->session()->regenerate();
-
-            return response()->json([
-                'message' => 'Usuario registrado exitosamente',
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'ci' => $user->ci,
-                    'code_est' => $user->code_est,
-                    'birthday' => $user->birthday,
-                    'cellphone' => $user->cellphone,
-                    'telephone' => $user->telephone,
-                    'role' => $user->getRoleNames()->first()
-                ]
-            ]);
-        }else{
-            return response()->json(['Postulante no encontrado'], 404);
-        }
-    }
 }
