@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Age;
+use App\Models\Plan;
 use App\Models\student_workshop;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,6 +41,19 @@ class authController extends Controller
             'code' => $student->code_est,
         ]);
         $user->assignRole('student');
+        $user->profile()->create([
+            'presentation'=>'',
+            'video'=>''
+        ]);
+        $plan= Plan::where('code',$student->code_plan)->first();
+        $age = Age::where('active',true)->latest()->first();
+        $user->academic_titles()->create([
+            'title' => $plan->name,
+            'status' => 'En proceso',
+            'active' => true,
+            'age_id' => $age->id,
+            'plan_id' => $plan->id,
+        ]);
         Auth::login($user);
         return $this->authenticated( $user);
     }
