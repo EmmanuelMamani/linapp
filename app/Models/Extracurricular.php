@@ -9,6 +9,8 @@ class Extracurricular extends Model
     protected $guarded = [];
 
     public function sections(){
-        return $this->belongsToMany(Section::class)->withTimestamps();
+        return $this->belongsToMany(Section::class, 'extracurricular_sections')
+            ->withTimestamps();
     }
+
 }

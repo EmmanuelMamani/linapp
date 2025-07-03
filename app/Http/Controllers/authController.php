@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Age;
 use App\Models\Plan;
+use App\Models\Profile;
 use App\Models\student_workshop;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class authController extends Controller
 {
@@ -87,11 +89,13 @@ class authController extends Controller
     }
 
 
-    public function user(Request $request)
-    {
-        return response()->json([
-            'user' => $request->user()
-        ]);
+    public function user(Request $request){
+
+        $user = $request->user()->load('profile');
+
+        $user->setRelation('roles', $user->getRoleNames());
+
+        return response()->json(['user' => $user]);
     }
 
     public function logout(Request $request)
@@ -103,5 +107,24 @@ class authController extends Controller
 
         return response()->json(['message' => 'Sesión cerrada exitosamente']);
     }
+    public function update(Request $request){
+        $user = $request->user();
 
+        if ($request->hasFile('photo')) {
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+            $path = $request->file('photo')->store('photos', 'public');
+            $user->photo = $path;
+        }
+        $user->cellphone = $request->cellphone;
+        $user->email = $request->email;
+        $user->password= $request->password?bcrypt($request->password):$user->password;
+        $user->save();
+
+        $profile = Profile::where('user_id',$user->id)->first();
+        $profile->presentation=$request->presentation??'';
+        $profile->video=$request->video??'';
+        $profile->save();
+    }
 }

@@ -9,13 +9,11 @@ class SectionController extends Controller
 {
     public function index(){
         $sections = Section::where('user_id', Auth::id())
-            ->with(['extracurriculars' => function($query) {
-                $query->orderBy('start_date');
-            }])
-            ->orderBy('order')
+            ->with('extracurriculars')
             ->get();
-        return response()->json([$sections]);
+        return response()->json($sections);
     }
+
     public function storeOrUpdate(Request $request)
     {
         $section = Section::updateOrCreate(

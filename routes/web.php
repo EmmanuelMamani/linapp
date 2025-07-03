@@ -21,7 +21,7 @@ Route::prefix('api')->middleware('web')->group(function () {
         //User
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/logout', [AuthController::class, 'logout']);
-
+        Route::put('/user', [AuthController::class, 'update']);
         //workshop
         Route::get('/workshopTypes',[WorkshopTypeController::class, 'index']);
         Route::post('/workshop', [WorkshopController::class, 'imported']);
@@ -32,6 +32,7 @@ Route::prefix('api')->middleware('web')->group(function () {
         Route::get('/age',[AgeCotroller::class, 'index']);
 
         //Extracurricular
+        Route::get('/topics',[ExtracurricularController::class, 'topics']);
         Route::post('/extracurricular', [ExtracurricularController::class, 'create']);
         Route::put('/extracurricular/{id}', [ExtracurricularController::class, 'update']);
         Route::delete('/extracurricular/{id}', [ExtracurricularController::class, 'delete']);

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('institution')->nullable();
-            $table->date('start:date')->nullable();
+            $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('diploma_file')->nullable();
             $table->boolean('active')->default(false);
