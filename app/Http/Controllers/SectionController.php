@@ -25,7 +25,7 @@ class SectionController extends Controller
                 'user_id' => Auth::id(),
             ]
         );
-
+        $section->load('extracurriculars.topic');
         return response()->json($section);
     }
     public function delete($id){
