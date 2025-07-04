@@ -9,8 +9,9 @@ class SectionController extends Controller
 {
     public function index(){
         $sections = Section::where('user_id', Auth::id())
-            ->with('extracurriculars')
+            ->with('extracurriculars.topic')
             ->get();
+
         return response()->json($sections);
     }
 

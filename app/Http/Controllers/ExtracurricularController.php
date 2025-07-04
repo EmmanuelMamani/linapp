@@ -18,7 +18,7 @@ class ExtracurricularController extends Controller
         }
 
         $extracurricular = Extracurricular::create([
-            'titulo'       => $request->title,
+            'title'       => $request->title,
             'institution'  => $request->institution,
             'start_date'   => $request->start_date,
             'end_date'     => $request->end_date,
@@ -26,11 +26,11 @@ class ExtracurricularController extends Controller
             'user_id'      => Auth::id(),
             'topic_id'     => $request->topic_id,
             'status'       => 'Finalizado',
-            'diploma_file' => $diplomaPath, // puede ser null si no se envió
+            'diploma_file' => $diplomaPath,
         ]);
 
         $this->assign($extracurricular->id, $request->section);
-
+        $extracurricular->load('topic');
         return response()->json($extracurricular);
     }
 
@@ -49,18 +49,27 @@ class ExtracurricularController extends Controller
         $extracurricular->active=!$extracurricular->active;
         $extracurricular->save();
     }
-    public function update($id,Request $request){
-        $extracurricular=Extracurricular::find($id);
-        $extracurricular::update([
-            'titulo' => $request->title,
-            'institution'=>$request->institution,
-            'start_date'=>$request->start_date,
-            'end_date'=>$request->end_date,
-            'topic_id'=>$request->topic_id,
+    public function update($id, Request $request)
+    {
+        $extracurricular = Extracurricular::findOrFail($id);
+
+        if ($request->hasFile('diploma_file')) {
+            $diplomaPath = $request->file('diploma_file')->store('diplomas', 'public');
+            $extracurricular->diploma_file = $diplomaPath;
+        }
+
+        $extracurricular->update([
+            'title'        => $request->title,
+            'institution'  => $request->institution,
+            'start_date'   => $request->start_date,
+            'end_date'     => $request->end_date,
+            'topic_id'     => $request->topic_id,
         ]);
-        $extracurricular->save();
-        return response()->json([$extracurricular]);
+        $extracurricular->load('topic');
+
+        return response()->json($extracurricular);
     }
+
     public function topics(){
         $topics = Topic::all();
         return response()->json($topics);

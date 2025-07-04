@@ -8,6 +8,7 @@ use App\Models\age;
 use App\Models\institution;
 use App\Models\plan;
 use App\Models\profile;
+use App\Models\Topic;
 use App\Models\unit;
 use App\Models\User;
 use App\Models\Workshop_type;
@@ -73,5 +74,11 @@ class InitSeeder extends Seeder
         //workshop types
         Workshop_type::create(['name'=>'Examen de grado']);
         Workshop_type::create(['name'=>'Taller de informatica']);
+
+        //Topics
+        Topic::create(['name'=>'Taller']);
+        Topic::create(['name'=>'Curso']);
+        Topic::create(['name'=>'Seminario']);
+
     }
 }

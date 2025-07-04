@@ -12,5 +12,7 @@ class Extracurricular extends Model
         return $this->belongsToMany(Section::class, 'extracurricular_sections')
             ->withTimestamps();
     }
-
+    public function topic(){
+        return $this->belongsTo(Topic::class);
+    }
 }

@@ -36,7 +36,7 @@ Route::prefix('api')->middleware('web')->group(function () {
         Route::post('/extracurricular', [ExtracurricularController::class, 'create']);
         Route::put('/extracurricular/{id}', [ExtracurricularController::class, 'update']);
         Route::delete('/extracurricular/{id}', [ExtracurricularController::class, 'delete']);
-        Route::post('/extracurricular/active', [ExtracurricularController::class, 'active']);
+        Route::post('/extracurricular/{id}/active', [ExtracurricularController::class, 'active']);
         Route::post('/extracurricular/assign/{extracurricular_id}/{section_id}', [ExtracurricularController::class, 'assign']);
 
         //Section
